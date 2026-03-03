@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>AI Customer Churn Predictor</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/predict" method="post">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Customer Tenure (Months)</label>
+                            <input type="number" class="form-control" name="tenure" required placeholder="e.g. 12">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Monthly Charges ($)</label>
+                            <input type="number" step="0.01" class="form-control" name="monthly_charges" required placeholder="e.g. 85.50">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Number of Support Calls</label>
+                            <input type="number" class="form-control" name="support_calls" required placeholder="e.g. 3">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Predict Churn Risk</button>
+                    </form>
+
+                    {% if prediction_text %}
+                    <div class="alert alert-info mt-4 text-center">
+                        <h4>{{ prediction_text }}</h4>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
