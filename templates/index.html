@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChurnGuard AI | Predictor</title>
+    <title>ChurnGuard AI | Enterprise</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -11,11 +11,9 @@
         .navbar { background-color: #0d6efd; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
         .card { border: none; border-radius: 15px; background-color: white; }
         .btn-primary { border-radius: 8px; padding: 12px; font-weight: 600; transition: 0.3s; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,110,253,.3); }
         .result-box { border-radius: 10px; padding: 20px; margin-top: 25px; }
         .risk-high { background-color: #fff5f5; border: 1px solid #feb2b2; color: #c53030; }
         .risk-low { background-color: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
-        hr { border-top: 1px solid #ddd; margin: 2rem 0; }
     </style>
 </head>
 <body>
@@ -28,57 +26,48 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
+        <div class="col-md-6">
             <div class="card shadow-lg p-4 mb-5">
-                <div class="text-center mb-4">
-                    <h2 class="fw-bold">Predict Churn</h2>
-                    <p class="text-muted">Analyze customer account metrics in real-time.</p>
-                </div>
+                <h3 class="fw-bold text-center">Customer Risk Analysis</h3>
+                <p class="text-muted text-center small">Enter details manually or upload a batch file.</p>
+                <hr>
 
-                <form action="/predict" method="post">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Customer Tenure (Months)</label>
-                        <input type="number" class="form-control form-control-lg" name="tenure" required placeholder="e.g. 12" min="0">
-                    </div>
+                <form action="/predict" method="post" enctype="multipart/form-data">
                     
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Monthly Charges ($)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" step="0.01" class="form-control form-control-lg" name="monthly_charges" required placeholder="0.00">
+                        <label class="form-label fw-bold">Option 1: Manual Entry</label>
+                        <div class="row g-2">
+                            <div class="col-4"><input type="number" class="form-control" name="tenure" placeholder="Tenure"></div>
+                            <div class="col-4"><input type="number" step="0.01" class="form-control" name="monthly_charges" placeholder="Charges $"></div>
+                            <div class="col-4"><input type="number" class="form-control" name="support_calls" placeholder="Calls"></div>
                         </div>
                     </div>
 
+                    <div class="text-center my-3"><span class="badge bg-light text-dark border">OR</span></div>
+
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Support Calls (Last 30 Days)</label>
-                        <input type="number" class="form-control form-control-lg" name="support_calls" required placeholder="e.g. 2" min="0">
+                        <label class="form-label fw-bold">Option 2: Bulk CSV Upload</label>
+                        <input type="file" class="form-control" name="file_upload" accept=".csv">
+                        <div class="form-text">File must contain: Tenure, Monthly_Charges, Support_Calls</div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 shadow-sm">Analyze Risk Profile</button>
+                    <button type="submit" class="btn btn-primary w-100 shadow-sm">Run AI Analytics</button>
                 </form>
 
                 {% if prediction_text %}
-                    <div class="result-box {% if 'High Risk' in prediction_text %}risk-high{% else %}risk-low{% endif %} text-center">
-                        <h4 class="mb-0 fw-bold">{% if 'High Risk' in prediction_text %}⚠️{% else %}✨{% endif %} {{ prediction_text }}</h4>
+                    <div class="result-box {% if 'High Risk' in prediction_text or 'Success' in prediction_text %}risk-high{% else %}risk-low{% endif %} text-center">
+                        <h5 class="mb-0 fw-bold">{{ prediction_text }}</h5>
                     </div>
                 {% endif %}
 
                 {% if history %}
                     <div class="mt-4 text-center">
                         <hr>
-                        <p class="small text-muted mb-3">
-                            <strong>Session History:</strong> {{ history|length }} prediction(s) recorded.
-                        </p>
-                        <a href="/download" class="btn btn-outline-success btn-sm px-4">
-                            📥 Download Results as CSV
-                        </a>
+                        <p class="small text-muted mb-3"><strong>Total Session Records:</strong> {{ history|length }}</p>
+                        <a href="/download" class="btn btn-outline-success btn-sm px-4">📥 Download All Predictions (CSV)</a>
                     </div>
                 {% endif %}
             </div>
-            
-            <p class="text-center text-muted small">
-                Deployed via Render • Powered by Scikit-Learn
-            </p>
         </div>
     </div>
 </div>
