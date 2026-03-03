@@ -58,15 +58,9 @@
                 </form>
 
                 {% if prediction_text %}
-                    {% if "High Risk" in prediction_text %}
-                        <div class="result-box risk-high text-center">
-                            <h4 class="mb-0 fw-bold">⚠️ {{ prediction_text }}</h4>
-                        </div>
-                    {% else %}
-                        <div class="result-box risk-low text-center">
-                            <h4 class="mb-0 fw-bold">✨ {{ prediction_text }}</h4>
-                        </div>
-                    {% endif %}
+                    <div class="result-box {% if 'High Risk' in prediction_text %}risk-high{% else %}risk-low{% endif %} text-center">
+                        <h4 class="mb-0 fw-bold">{% if 'High Risk' in prediction_text %}⚠️{% else %}✨{% endif %} {{ prediction_text }}</h4>
+                    </div>
                 {% endif %}
 
                 {% if history %}
